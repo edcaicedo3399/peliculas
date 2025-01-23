@@ -1,0 +1,36 @@
+### Recuperar todas las películas
+GET http://localhost:1234/movies
+
+### Recuperar una película por id
+GET http://localhost:1234/movies/e5176544-cf89-11ef-ae3f-0242ac110002
+
+### Recuperar todas las películas por un género
+GET http://localhost:1234/movies?genre=drama
+
+### Crear una película con POST
+POST http://localhost:1234/movies
+Content-Type: application/json
+
+{
+  "sql": "SELECT * FROM users",
+  "title": "The David",
+  "year": 1975,
+  "director": "Francis Ford Coppola",
+  "duration": 175,
+  "poster": "https://img.fruugo.com/product/4/49/14441494_max.jpg",
+  "genre": [
+    "Crime",
+    "Drama"
+  ]
+}
+
+### Borrar una película
+DELETE http://localhost:1234/movies/b7323643-d474-11ef-ae3f-0242ac110002
+
+### Actualizar una película
+PATCH http://localhost:1234/movies/e5177578-cf89-11ef-ae3f-0242ac110002
+Content-Type: application/json
+
+{
+  "year": 2024
+}
