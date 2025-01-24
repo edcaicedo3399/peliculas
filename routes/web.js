@@ -1,5 +1,5 @@
-const { Router } = require('express');
-const path = require('path');
+import { Router } from 'express';
+import path from 'path';
 
 const webRouter = Router();
 
@@ -13,4 +13,4 @@ webRouter.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '../web', 'index.html'));
 });
 
-module.exports = webRouter;
+export { webRouter };
