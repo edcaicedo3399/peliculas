@@ -18,7 +18,7 @@
     }
   </style>
   <script type="module">
-    fetch('http://localhost:10000/movies')
+    fetch('https://peliculas-4v49.onrender.com//movies')
       .then(res => res.json())
       .then(movies => {
         const html = movies.map(movie => {
@@ -40,7 +40,7 @@
             const article = e.target.closest('article')
             const id = article.dataset.id
 
-            fetch(`http://localhost:10000/movies/${id}`, {
+            fetch('https://peliculas-4v49.onrender.com/movies/${id}', {
               method: 'DELETE'
             })
               .then(res => {
