@@ -1,18 +1,4 @@
-// import { Pool } from 'pg';
-// import { createClient } from '@supabase/supabase-js';
-//
-// // Crear un cliente de Supabase (opcional)
-// const supabase = createClient('https://vfhlckxptjjsynzaqmpg.supabase.co', 'public-anon-key');
-//
-//
-// // Configuración de conexión con PostgreSQL
-// const pool = new Pool({
-//   user: 'postgres',
-//   host: 'localhost',
-//   database: 'moviesdb',
-//   password: 'root',
-//   port: 5432, // Puerto predeterminado de PostgreSQL
-// });
+
 import pkg from 'pg';
 const { Pool } = pkg;
 
