@@ -1,6 +1,7 @@
 import cors from 'cors'
 
 const ACCEPTED_ORIGINS = [
+  'https://peliculas-4v49.onrender.com',
   'http://localhost:8080',
   'http://localhost:1234',
   'https://movies.com',
