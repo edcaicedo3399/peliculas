@@ -40,7 +40,7 @@
             const article = e.target.closest('article')
             const id = article.dataset.id
 
-            fetch('https://peliculas-4v49.onrender.com/movies/${id}', {
+            fetch(`https://peliculas-4v49.onrender.com/movies/${id}`, {
               method: 'DELETE'
             })
               .then(res => {
