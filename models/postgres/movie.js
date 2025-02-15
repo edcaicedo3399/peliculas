@@ -71,7 +71,7 @@ export class MovieModel {
         m.poster,
         m.rate,
         m.id,
-        COALESCE(STRING_AGG(g.name, ', '), '') AS genres
+        COALESCE(STRING_AGG(g.name, ', '), '') AS genre
       FROM movies m
              LEFT JOIN movie_genres mg ON m.id = mg.movie_id
              LEFT JOIN genres g ON mg.genre_id = g.id
