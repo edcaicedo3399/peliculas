@@ -62,9 +62,21 @@ export class MovieModel {
       }
     }
 
-    return await query(
-        'SELECT title, year, director, duration, poster, rate, id FROM movies;'
-    );
+    return await query(`
+    SELECT 
+        m.title, 
+        m.year, 
+        m.director, 
+        m.duration, 
+        m.poster, 
+        m.rate, 
+        m.id,
+        GROUP_CONCAT(g.name SEPARATOR ', ') AS genres
+    FROM movies m
+    LEFT JOIN movie_genres mg ON m.id = mg.movie_id
+    LEFT JOIN genres g ON mg.genre_id = g.id
+    GROUP BY m.id;
+`);
   }
 
   // Obtener película por ID
