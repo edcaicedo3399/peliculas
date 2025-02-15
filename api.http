@@ -12,10 +12,10 @@ POST http://localhost:1234/movies
 Content-Type: application/json
 
 {
-  "sql": "SELECT * FROM users",
-  "title": "The David",
+
+  "title": "The Daviddd2",
   "year": 1975,
-  "director": "Francis Ford Coppola",
+  "director": "Francis Ford Coppola33",
   "duration": 175,
   "poster": "https://img.fruugo.com/product/4/49/14441494_max.jpg",
   "genre": [

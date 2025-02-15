@@ -1,4 +1,4 @@
-<!DOCTYPE>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -16,45 +16,188 @@
       width: 320px;
       max-width: 100%;
     }
+
+    .new-movie-button {
+      display: block;
+      margin: 1rem 0;
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    .new-movie-button:hover {
+      background-color: #218838;
+    }
+
+    .movie-form {
+      display: none;
+      padding: 1rem;
+      border: 1px solid #ccc;
+      margin-top: 1rem;
+    }
+
+    .movie-form input {
+      display: block;
+      width: 100%;
+      margin-bottom: 0.5rem;
+      padding: 0.5rem;
+    }
+
+    .movie-form button {
+      padding: 0.5rem 1rem;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    .movie-form button:hover {
+      background-color: #0056b3;
+    }
   </style>
   <script type="module">
-    fetch('https://peliculas-4v49.onrender.com/movies')
-      .then(res => res.json())
-      .then(movies => {
-        const html = movies.map(movie => {
-          return `
-            <article data-id="${movie.id}">
-              <h2>${movie.title}</h2>
-              <img src="${movie.poster}" alt="${movie.title}">
-              <p>${movie.year}</p>
+    const API_URL = 'https://peliculas-4v49.onrender.com/movies';
 
-              <button>Eliminar</button>
-            </article>
-          `
-        }).join('')
+    // Cargar películas desde la API
+    fetch(API_URL)
+            .then(res => res.json())
+            .then(movies => {
+              const html = movies.map(movie => `
+          <article data-id="${movie.id}">
+            <h2>${movie.title}</h2>
+            <img src="${movie.poster}" alt="${movie.title}">
+            <p><strong>Year:</strong> ${movie.year}</p>
+            <p><strong>Director:</strong> ${movie.director}</p>
+            <p><strong>Duration:</strong> ${movie.duration} min</p>
+            <p><strong>Genres:</strong> ${movie.genre ? movie.genre.join(', ') : "N/A"}</p>
+            <button class="delete-button">Eliminar</button>
+            <button class="edit-button">Modificar</button>
+          </article>
+        `).join('');
 
-        document.querySelector('main').innerHTML = html
+              document.querySelector('main').innerHTML = html;
 
-        document.addEventListener('click', e => {
-          if (e.target.matches('button')) {
-            const article = e.target.closest('article')
-            const id = article.dataset.id
+              document.addEventListener('click', e => {
+                const article = e.target.closest('article');
+                if (!article) return;
 
-            fetch(`https://peliculas-4v49.onrender.com/movies/${id}`, {
-              method: 'DELETE'
-            })
-              .then(res => {
-                if (res.ok) {
-                  article.remove()
+                const id = article.dataset.id;
+
+                // Eliminar película
+                if (e.target.matches('.delete-button')) {
+                  fetch(`${API_URL}/${id}`, { method: 'DELETE' })
+                          .then(res => {
+                            if (res.ok) article.remove();
+                          });
                 }
-              })
-            }
 
-        })
-      })
+                // Editar película
+                if (e.target.matches('.edit-button')) {
+                  const newTitle = prompt("Enter new title:");
+                  const newYear = parseInt(prompt("Enter new year:"), 10);
+
+                  if (!newTitle || isNaN(newYear)) {
+                    alert("Invalid input. Please enter a valid title and year.");
+                    return;
+                  }
+
+                  fetch(`${API_URL}/${id}`, {
+                    method: 'PATCH',
+                    headers: {
+                      "Content-Type": "application/json",
+                      "Accept": "application/json"
+                    },
+                    body: JSON.stringify({ title: newTitle, year: newYear })
+                  })
+                          .then(res => {
+                            if (!res.ok) throw new Error("Failed to update movie.");
+                            return res.json();
+                          })
+                          .then(() => {
+                            location.reload();
+                          })
+                          .catch(error => {
+                            alert("Error updating movie: " + error.message);
+                          });
+                }
+              });
+            });
+
+    // Mostrar el formulario cuando se haga clic en "Add New Movie"
+    document.querySelector('.new-movie-button').addEventListener('click', () => {
+      document.querySelector('.movie-form').style.display = 'block';
+
+      // Prellenar el campo "genre" con ["Crime", "Drama"]
+      document.querySelector('#genre').value = "Crime, Drama";
+    });
+
+    // Manejar el envío del formulario
+    document.querySelector('.movie-form').addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      const title = document.querySelector('#title').value;
+      const year = parseInt(document.querySelector('#year').value, 10);
+      const director = document.querySelector('#director').value;
+      const duration = parseInt(document.querySelector('#duration').value, 10);
+      const poster = document.querySelector('#poster').value;
+
+      // "Crime, Drama" -> ["Crime", "Drama"]
+      const genre = document.querySelector('#genre').value.split(',').map(g => g.trim());
+
+      if (!title || isNaN(year) || !director || isNaN(duration) || !poster) {
+        alert("Por favor, completa todos los campos correctamente.");
+        return;
+      }
+
+      const newMovie = { title, year, director, duration, poster, genre };
+
+      try {
+        const res = await fetch(API_URL, {
+          method: 'POST',
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          },
+          body: JSON.stringify(newMovie)
+        });
+
+        if (!res.ok) {
+          throw new Error(`Failed to add movie: ${res.status} ${res.statusText}`);
+        }
+
+        alert("Película agregada exitosamente!");
+        document.querySelector('.movie-form').reset();
+        document.querySelector('.movie-form').style.display = 'none';
+        location.reload();
+
+      } catch (error) {
+        console.error("Error agregando película:", error);
+        alert("Error al agregar la película. Revisa la consola.");
+      }
+    });
+
   </script>
 </head>
 <body>
-  <main></main>
+
+<!-- Botón para mostrar el formulario -->
+<button class="new-movie-button">Add New Movie</button>
+
+<!-- Formulario para agregar películas -->
+<form class="movie-form">
+  <input type="text" id="title" placeholder="Título de la película" required>
+  <input type="number" id="year" placeholder="Año de estreno (Ej: 1975)" required>
+  <input type="text" id="director" placeholder="Director" required>
+  <input type="number" id="duration" placeholder="Duración (minutos)" required>
+  <input type="text" id="poster" placeholder="URL del póster" required>
+  <input type="text" id="genre" placeholder="Géneros (Ej: Crime, Drama)" required>
+  <button type="submit">Guardar Película</button>
+</form>
+
+<main></main>
+
 </body>
 </html>
