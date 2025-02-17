@@ -36,7 +36,6 @@ export class MovieModel {
     if (genre) {
       try {
         const lowerCaseGenre = genre.toLowerCase();
-
         const genres = await query(
             'SELECT id FROM genres WHERE LOWER(name) = $1;',
             [lowerCaseGenre]
@@ -46,9 +45,7 @@ export class MovieModel {
           console.log('⚠️ No genre found');
           return [];
         }
-
         const { id } = genres[0];
-
         return await query(
             `SELECT m.title, m.year, m.director, m.duration, m.poster, m.rate, m.id AS movie_id
            FROM movies m

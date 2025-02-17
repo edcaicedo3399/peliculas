@@ -2,10 +2,12 @@
 GET http://localhost:1234/movies
 
 ### Recuperar una película por id
-GET http://localhost:1234/movies/e5176544-cf89-11ef-ae3f-0242ac110002
+GET http://localhost:1234/movies/31981159-8373-438d-b837-880bde0fdf58
 
 ### Recuperar todas las películas por un género
 GET http://localhost:1234/movies?genre=drama
+###
+GET http://localhost:1234/movies?genres=drama,crime
 
 ### Crear una película con POST
 POST http://localhost:1234/movies
